@@ -398,31 +398,31 @@ public class TestReader : MonoBehaviour
     }
 }
 
-// /// <summary>
-// /// Stores button state for a controller
-// /// Matches the data structure from Buttons.cpp
-// /// </summary>
-// [System.Serializable]
-// public class ControllerButtonState
-// {
-//     // Face buttons
-//     public bool A;  // Right controller A button (or left X)
-//     public bool B;  // Right controller B button (or left Y)
-//     public bool X;  // Left controller X button
-//     public bool Y;  // Left controller Y button
+/// <summary>
+/// Stores button state for a controller
+/// Matches the data structure from Buttons.cpp
+/// </summary>
+[System.Serializable]
+public class ControllerButtonState
+{
+    // Face buttons
+    public bool A;  // Right controller A button (or left X)
+    public bool B;  // Right controller B button (or left Y)
+    public bool X;  // Left controller X button
+    public bool Y;  // Left controller Y button
     
-//     // Triggers and grips (boolean states)
-//     public bool TriggerButton;  // Index trigger pressed (> threshold)
-//     public bool GripButton;     // Grip trigger pressed (> threshold)
+    // Triggers and grips (boolean states)
+    public bool TriggerButton;  // Index trigger pressed (> threshold)
+    public bool GripButton;     // Grip trigger pressed (> threshold)
     
-//     // Touch sensors
-//     public bool ThumbUp;        // Thumb lifted from thumbrest
+    // Touch sensors
+    public bool ThumbUp;        // Thumb lifted from thumbrest
     
-//     // Joystick
-//     public bool JoystickButton; // Joystick clicked
-//     public Vector2 JoystickVec; // Joystick position (-1 to 1)
+    // Joystick
+    public bool JoystickButton; // Joystick clicked
+    public Vector2 JoystickVec; // Joystick position (-1 to 1)
     
-//     // Analog values (0 to 1)
-//     public float IndexTriggerValue; // Index trigger analog
-//     public float GripTriggerValue;  // Grip trigger analog
-// }
+    // Analog values (0 to 1)
+    public float IndexTriggerValue; // Index trigger analog
+    public float GripTriggerValue;  // Grip trigger analog
+}
