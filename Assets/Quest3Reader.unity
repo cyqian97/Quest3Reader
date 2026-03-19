@@ -1381,7 +1381,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 268468877}
-  - component: {fileID: 268468878}
   - component: {fileID: 268468879}
   m_Layer: 0
   m_Name: OculusReaderManager
@@ -1405,18 +1404,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &268468878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 268468876}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d38cb32759d8634e83eb18386650757, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TestReader2
 --- !u!114 &268468879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1429,6 +1416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f070d0fa65dafc9409417ef4a2cc8ac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestReader
+  relativeToHead: 0
 --- !u!1 &270269662
 GameObject:
   m_ObjectHideFlags: 0
@@ -5172,7 +5160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _monoscopic: 0
   _sharpenType: 0
-  _enableDynamicResolution: 0
+  _enableDynamicResolution: 1
   minDynamicResolutionScale: 1
   maxDynamicResolutionScale: 1
   quest2MinDynamicResolutionScale: 0.7

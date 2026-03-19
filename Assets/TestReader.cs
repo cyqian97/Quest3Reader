@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Text;
-using System.Collections;
+using TMPro;
 
 /// <summary>
 /// Main controller reader that matches the original oculus_reader protocol
@@ -22,6 +22,13 @@ public class TestReader : MonoBehaviour
     private Transform rightHandAnchor;
     private Transform centerEyeAnchor;
     
+    // If true, hand poses are relative to the head; if false, absolute world space
+    public bool relativeToHead = false;
+
+    // Version display
+    public const string APP_VERSION = "v1.0.0";
+    public TextMeshProUGUI versionLabel;
+
     // Button tracking
     private ControllerButtonState leftButtons = new ControllerButtonState();
     private ControllerButtonState rightButtons = new ControllerButtonState();
@@ -64,7 +71,7 @@ public class TestReader : MonoBehaviour
             Debug.Log("rightHandAnchor successfully detected.");
         }
         
-        centerEyeAnchor = cameraRig.centerEyeAnchor;        
+        centerEyeAnchor = cameraRig.centerEyeAnchor;
         if (cameraRig == null)
         {
             Debug.LogError("centerEyeAnchor not found! Please add centerEyeAnchor prefab to your scene.");
@@ -74,22 +81,21 @@ public class TestReader : MonoBehaviour
         else{
             Debug.Log("centerEyeAnchor successfully detected.");
         }
-        
 
+        if (versionLabel != null)
+            versionLabel.text = APP_VERSION;
     }
 
-    
     void Update()
-    {        
+    {
         // Update button states
         UpdateButtonStates();
-        
+
         // Build and send the pose + button data string
         // Format matches original: "l:matrix|r:matrix&buttonData"
         string outputString = BuildOutputString();
         LogToAndroid(outputString);
         LogDetailedDebug(outputString);
-        
     }
     
     private void UpdateButtonStates()
@@ -134,7 +140,7 @@ public class TestReader : MonoBehaviour
             Vector3.one
         );
         Matrix4x4 headPoseInv = headPoseMatrix.inverse;
-        
+
         // Left hand - check if controller is connected/tracked
         if (leftHandAnchor != null)
         {
@@ -143,9 +149,8 @@ public class TestReader : MonoBehaviour
                 leftHandAnchor.rotation,
                 Vector3.one
             );
-            
-            // Transform to head coordinate system (matches C++ code)
-            Matrix4x4 leftHandHeadCoord = headPoseInv * leftHandMatrix;
+
+            Matrix4x4 leftHandCoord = relativeToHead ? headPoseInv * leftHandMatrix : leftHandMatrix;
             
             if (!first)
             {
@@ -155,7 +160,7 @@ public class TestReader : MonoBehaviour
             
             output.Append('l');
             output.Append(':');
-            output.Append(MatrixToString(leftHandHeadCoord));
+            output.Append(MatrixToString(leftHandCoord));
             buttons.Append(ButtonsToString('l', leftButtons));
             
             first = false;
@@ -169,9 +174,8 @@ public class TestReader : MonoBehaviour
                 rightHandAnchor.rotation,
                 Vector3.one
             );
-            
-            // Transform to head coordinate system
-            Matrix4x4 rightHandHeadCoord = headPoseInv * rightHandMatrix;
+
+            Matrix4x4 rightHandCoord = relativeToHead ? headPoseInv * rightHandMatrix : rightHandMatrix;
             
             if (!first)
             {
@@ -181,7 +185,7 @@ public class TestReader : MonoBehaviour
             
             output.Append('r');
             output.Append(':');
-            output.Append(MatrixToString(rightHandHeadCoord));
+            output.Append(MatrixToString(rightHandCoord));
             buttons.Append(ButtonsToString('r', rightButtons));
             
             first = false;
@@ -310,16 +314,18 @@ public class TestReader : MonoBehaviour
         string[] poses = posePart.Split('|');
         foreach (string pose in poses)
         {
-            if (string.IsNullOrEmpty(pose)) continue;
-            
+            if (string.IsNullOrEmpty(pose))
+                continue;
+
             string[] poseData = pose.Split(':');
-            if (poseData.Length < 2) continue;
-            
+            if (poseData.Length < 2)
+                continue;
+
             char side = poseData[0][0];
             string sideLabel = side == 'l' ? "LEFT HAND" : "RIGHT HAND";
-            
+
             debugLog.AppendLine($"\n{sideLabel}:");
-            
+
             // Parse matrix to show position
             string[] matrixValues = poseData[1].Trim().Split(' ');
             if (matrixValues.Length >= 16)
@@ -328,17 +334,19 @@ public class TestReader : MonoBehaviour
                 float posX = float.Parse(matrixValues[3]);
                 float posY = float.Parse(matrixValues[7]);
                 float posZ = float.Parse(matrixValues[11]);
-                
+
                 debugLog.AppendLine($"  Position (head-relative): ({posX:F3}, {posY:F3}, {posZ:F3})");
-                
+
                 // Show rotation (first 3x3 of matrix)
                 debugLog.AppendLine("  Rotation Matrix (3x3):");
                 debugLog.AppendLine($"    [{matrixValues[0]}, {matrixValues[1]}, {matrixValues[2]}]");
                 debugLog.AppendLine($"    [{matrixValues[4]}, {matrixValues[5]}, {matrixValues[6]}]");
-                debugLog.AppendLine($"    [{matrixValues[8]}, {matrixValues[9]}, {matrixValues[10]}]");
+                debugLog.AppendLine(
+                    $"    [{matrixValues[8]}, {matrixValues[9]}, {matrixValues[10]}]"
+                );
             }
         }
-        
+
         // Parse buttons
         debugLog.AppendLine("\nBUTTONS:");
         string[] buttonGroups = buttonPart.Split(',');
@@ -347,8 +355,9 @@ public class TestReader : MonoBehaviour
         foreach (string buttonInfo in buttonGroups)
         {
             string trimmed = buttonInfo.Trim();
-            if (string.IsNullOrEmpty(trimmed)) continue;
-            
+            if (string.IsNullOrEmpty(trimmed))
+                continue;
+
             if (trimmed == "L")
             {
                 currentHand = "LEFT";
@@ -416,7 +425,7 @@ public class ControllerButtonState
     public bool GripButton;     // Grip trigger pressed (> threshold)
     
     // Touch sensors
-    public bool ThumbUp;        // Thumb lifted from thumbrest
+    public bool ThumbUp; // Thumb lifted from thumbrest
     
     // Joystick
     public bool JoystickButton; // Joystick clicked
