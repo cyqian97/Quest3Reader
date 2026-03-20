@@ -26,7 +26,7 @@ public class TestReader : MonoBehaviour
     public bool relativeToHead = false;
 
     // Version display
-    public const string APP_VERSION = "v1.0.0";
+    public const string APP_VERSION = "v1.0.1";
     public TextMeshProUGUI versionLabel;
 
     // Button tracking
@@ -49,7 +49,7 @@ public class TestReader : MonoBehaviour
         }
         
         // Get the tracking anchors
-        leftHandAnchor = cameraRig.leftHandAnchor;
+        leftHandAnchor = cameraRig.leftControllerAnchor;
         if (leftHandAnchor == null)
         {
             Debug.LogError("leftHandAnchor not found! Please add leftHandAnchor prefab to your scene.");
@@ -60,7 +60,8 @@ public class TestReader : MonoBehaviour
             Debug.Log("leftHandAnchor successfully detected.");
         }
         
-        rightHandAnchor = cameraRig.rightHandAnchor;        
+        rightHandAnchor = cameraRig.rightControllerAnchor;
+
         if (cameraRig == null)
         {
             Debug.LogError("rightHandAnchor not found! Please add rightHandAnchor prefab to your scene.");
