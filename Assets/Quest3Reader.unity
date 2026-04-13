@@ -5014,10 +5014,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ControllerAxisVisualizer
   leftHandAnchor: {fileID: 1376657295}
   rightHandAnchor: {fileID: 605751514}
-  axisLength: 0.1
-  lineWidth: 0.002
   showLeft: 1
   showRight: 1
+  showGlobal: 1
+  axisLength: 0.1
+  localLineWidth: 0.004
+  globalAxisOrigin: {x: 0, y: 0, z: 0}
+  globalAxisLength: 0.5
+  globalLineWidth: 0.008
   xAxisMaterial: {fileID: 2100000, guid: ffde486c1adc06b43a28d636a9307a00, type: 2}
   yAxisMaterial: {fileID: 2100000, guid: 216dbe412d5768b48b54fb927f13e39e, type: 2}
   zAxisMaterial: {fileID: 2100000, guid: fd110af58a1b4484d838a3dca01884f3, type: 2}
