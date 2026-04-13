@@ -38,11 +38,14 @@ public class ControllerAxisVisualizer : MonoBehaviour
     private LineRenderer[] rightLines;
     private LineRenderer[] globalLines;
 
+    private TestReader testReader;
+
     void Start()
     {
         leftLines = CreateAxisLines("LeftAxis", localLineWidth);
         rightLines = CreateAxisLines("RightAxis", localLineWidth);
         globalLines = CreateAxisLines("GlobalAxis", globalLineWidth);
+        testReader = FindFirstObjectByType<TestReader>();
     }
 
     void Update()
@@ -92,34 +95,37 @@ public class ControllerAxisVisualizer : MonoBehaviour
 
     private void UpdateAxisLines(LineRenderer[] lines, Transform anchor)
     {
+        bool rh = testReader != null && testReader.rightHandedOutput;
         Vector3 origin = anchor.position;
 
-        // X axis - red
+        // X axis - red (unchanged in both frames)
         lines[0].SetPosition(0, origin);
         lines[0].SetPosition(1, origin + anchor.right * axisLength);
 
-        // Y axis - green
+        // Y axis - green: up in Unity LH, forward in RH
         lines[1].SetPosition(0, origin);
-        lines[1].SetPosition(1, origin + anchor.up * axisLength);
+        lines[1].SetPosition(1, origin + (rh ? anchor.forward : anchor.up) * axisLength);
 
-        // Z axis - blue
+        // Z axis - blue: forward in Unity LH, up in RH
         lines[2].SetPosition(0, origin);
-        lines[2].SetPosition(1, origin + anchor.forward * axisLength);
+        lines[2].SetPosition(1, origin + (rh ? anchor.up : anchor.forward) * axisLength);
     }
 
     private void UpdateGlobalAxisLines(LineRenderer[] lines)
     {
-        // X axis - red (world right)
+        bool rh = testReader != null && testReader.rightHandedOutput;
+
+        // X axis - red (unchanged in both frames)
         lines[0].SetPosition(0, globalAxisOrigin);
         lines[0].SetPosition(1, globalAxisOrigin + Vector3.right * globalAxisLength);
 
-        // Y axis - green (world up)
+        // Y axis - green: up in Unity LH, forward in RH
         lines[1].SetPosition(0, globalAxisOrigin);
-        lines[1].SetPosition(1, globalAxisOrigin + Vector3.up * globalAxisLength);
+        lines[1].SetPosition(1, globalAxisOrigin + (rh ? Vector3.forward : Vector3.up) * globalAxisLength);
 
-        // Z axis - blue (world forward)
+        // Z axis - blue: forward in Unity LH, up in RH
         lines[2].SetPosition(0, globalAxisOrigin);
-        lines[2].SetPosition(1, globalAxisOrigin + Vector3.forward * globalAxisLength);
+        lines[2].SetPosition(1, globalAxisOrigin + (rh ? Vector3.up : Vector3.forward) * globalAxisLength);
     }
 
     private void SetActive(LineRenderer[] lines, bool active)

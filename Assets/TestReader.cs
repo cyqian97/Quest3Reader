@@ -25,8 +25,12 @@ public class TestReader : MonoBehaviour
     // If true, hand poses are relative to the head; if false, absolute world space
     public bool relativeToHead = false;
 
+    // If true, convert output matrices from Unity left-handed (Y up, Z forward)
+    // to right-handed (Z up, Y forward) via change of basis: M_rh = C * M_lh * C
+    public bool rightHandedOutput = false;
+
     // Version display
-    public const string APP_VERSION = "v1.0.1";
+    public string APP_VERSION = "v1.0.1";
     public TextMeshProUGUI versionLabel;
 
     // Button tracking
@@ -152,13 +156,14 @@ public class TestReader : MonoBehaviour
             );
 
             Matrix4x4 leftHandCoord = relativeToHead ? headPoseInv * leftHandMatrix : leftHandMatrix;
-            
+            if (rightHandedOutput) leftHandCoord = ConvertToRightHanded(leftHandCoord);
+
             if (!first)
             {
                 output.Append('|');
                 buttons.Append(',');
             }
-            
+
             output.Append('l');
             output.Append(':');
             output.Append(MatrixToString(leftHandCoord));
@@ -177,7 +182,8 @@ public class TestReader : MonoBehaviour
             );
 
             Matrix4x4 rightHandCoord = relativeToHead ? headPoseInv * rightHandMatrix : rightHandMatrix;
-            
+            if (rightHandedOutput) rightHandCoord = ConvertToRightHanded(rightHandCoord);
+
             if (!first)
             {
                 output.Append('|');
@@ -198,7 +204,23 @@ public class TestReader : MonoBehaviour
         
         return output.ToString();
     }
-    
+
+    private static Matrix4x4 ConvertToRightHanded(Matrix4x4 m)
+    {
+        // Change of basis: swap Y and Z axes
+        // Unity left-hand:   X right, Y up,      Z forward
+        // Target right-hand: X right, Y forward,  Z up
+        //
+        // M_rh = C * M_lh * C,  where C swaps indices 1 and 2
+        // Equivalent to: swap rows 1&2, then swap columns 1&2
+        int[] idx = {0, 2, 1, 3};
+        Matrix4x4 result = new Matrix4x4();
+        for (int row = 0; row < 4; row++)
+            for (int col = 0; col < 4; col++)
+                result[row, col] = m[idx[row], idx[col]];
+        return result;
+    }
+
     private string MatrixToString(Matrix4x4 matrix)
     {
         // Format matches the C++ Matrix4f::ToString() output

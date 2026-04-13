@@ -1417,6 +1417,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestReader
   relativeToHead: 0
+  rightHandedOutput: 1
+  APP_VERSION: v1.0.2
   versionLabel: {fileID: 1624034100}
 --- !u!1 &270269662
 GameObject:
