@@ -11,7 +11,7 @@ using TMPro;
 /// Matrix: space-separated 16 floats (4x4 row-major)
 /// Buttons: comma-separated flags and values
 /// </summary>
-public class TestReader : MonoBehaviour
+public class QuestReader : MonoBehaviour
 { 
     // This matches the original log tag "wE9ryARX" from the C++ code
     private const string LOG_TAG = "wE9ryARX";

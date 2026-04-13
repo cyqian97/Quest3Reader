@@ -38,14 +38,14 @@ public class ControllerAxisVisualizer : MonoBehaviour
     private LineRenderer[] rightLines;
     private LineRenderer[] globalLines;
 
-    private TestReader testReader;
+    private QuestReader questReader;
 
     void Start()
     {
         leftLines = CreateAxisLines("LeftAxis", localLineWidth);
         rightLines = CreateAxisLines("RightAxis", localLineWidth);
         globalLines = CreateAxisLines("GlobalAxis", globalLineWidth);
-        testReader = FindFirstObjectByType<TestReader>();
+        questReader = FindFirstObjectByType<QuestReader>();
     }
 
     void Update()
@@ -95,7 +95,7 @@ public class ControllerAxisVisualizer : MonoBehaviour
 
     private void UpdateAxisLines(LineRenderer[] lines, Transform anchor)
     {
-        bool rh = testReader != null && testReader.rightHandedOutput;
+        bool rh = questReader != null && questReader.rightHandedOutput;
         Vector3 origin = anchor.position;
 
         // X axis - red (unchanged in both frames)
@@ -113,7 +113,7 @@ public class ControllerAxisVisualizer : MonoBehaviour
 
     private void UpdateGlobalAxisLines(LineRenderer[] lines)
     {
-        bool rh = testReader != null && testReader.rightHandedOutput;
+        bool rh = questReader != null && questReader.rightHandedOutput;
 
         // X axis - red (unchanged in both frames)
         lines[0].SetPosition(0, globalAxisOrigin);

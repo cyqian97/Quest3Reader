@@ -1383,7 +1383,7 @@ GameObject:
   - component: {fileID: 268468877}
   - component: {fileID: 268468879}
   m_Layer: 0
-  m_Name: OculusReaderManager
+  m_Name: OuestReaderManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1415,7 +1415,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f070d0fa65dafc9409417ef4a2cc8ac3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TestReader
+  m_EditorClassIdentifier: Assembly-CSharp::QuestReader
   relativeToHead: 0
   rightHandedOutput: 1
   APP_VERSION: v1.0.2
